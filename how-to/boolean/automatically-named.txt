@@ -1,0 +1,27 @@
+CREATE TABLE suspect (
+    suspect_id              RAW(16) DEFAULT sys_guid() PRIMARY KEY,
+    suspect                 VARCHAR2(1000) NOT NULL,
+    
+    -- Ensure that the suspect name is unique
+    UNIQUE (suspect),
+    
+    is_liar NUMBER(1) NOT NULL,  -- A boolean-like value of 1 for true and 0 for false
+    
+    -- Automatically named check constraint to ensure only 0 or 1 values for the boolean
+    CHECK (is_liar IN (0, 1)),
+
+    -- Additional columns for note and dates
+    note                    VARCHAR2(4000),  -- General-purpose note field
+    date_created            TIMESTAMP(9) WITH TIME ZONE DEFAULT systimestamp(9) NOT NULL,
+    date_updated            TIMESTAMP(9) WITH TIME ZONE,
+    date_created_or_updated  TIMESTAMP(9) WITH TIME ZONE GENERATED ALWAYS AS (coalesce(date_updated, date_created)) VIRTUAL
+);
+
+-- Trigger to set date_updated when a record is updated
+CREATE OR REPLACE TRIGGER trigger_set_date_updated_suspect
+BEFORE UPDATE ON suspect
+FOR EACH ROW
+BEGIN
+    :NEW.date_updated := systimestamp;
+END;
+/

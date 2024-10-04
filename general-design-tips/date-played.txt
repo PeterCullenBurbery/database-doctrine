@@ -1,0 +1,11 @@
+I would like to point out there is a difference between storing when a record was added,
+and when an important date associated with it occured.
+date_played for Catan game
+date_eaten for food
+date_attended for church
+now probably you will be entering the record close to the time that you played the Catan game, or ate the food, or attended church, but that is not necessarily the case.
+you might write down that you did something. then a week later you add that. in that case, the date_created for the record and the date_played/eaten/attended are different so you should store both.
+
+Now you may ask why is the default for date_played the current time? Well its because probably I'll enter it around the time and it makes it convenient if I enter it right away.
+There is a risk that I forget this and add it and date_played is stored as the current time but I don't notice that I'm entering a value for the past.
+That is why a new column could be added with a boolean like date_confirmed where you confirm that the date you entered it is relatively close the time it happened. The date_confirmed would be false by default and you would have to set it. or you could have date_confirmed and you would need to set date_confirmed to the current time.
